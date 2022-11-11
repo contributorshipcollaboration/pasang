@@ -1,0 +1,10 @@
+{
+    "name": "pasang",
+    "description": "Add contributor information automatically to submission portals.",
+    "version": "1.0",
+    "manifest_version": 3,
+    "permissions": ["scripting", "activeTab"],
+    "action": {
+        "default_popup": "popup.html"
+    }
+  }
