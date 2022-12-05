@@ -1,7 +1,15 @@
+// TODO: Delete after I figured out how to source this from assets/js/utils.js
+async function getCurrentTab() {
+    let queryOptions = { active: true, currentWindow: true };
+    // `tab` will either be a `tabs.Tab` instance or `undefined`.
+    let [tab] = await chrome.tabs.query(queryOptions);
+    return tab;
+  }
+
 // Function to populate Nature Human Behaviour submission portal
-function nhb_recipe(contributors_info) {
+export async function nhb_recipe(contributors_info) {
     // get current tab id
-    const [tab] = chrome.tabs.query({ active: true, currentWindow: true });
+    let tab = await getCurrentTab();
 
     function set_n_contrib(contributors_info) {
         // Get the number of contributors
@@ -10,16 +18,22 @@ function nhb_recipe(contributors_info) {
         document.getElementById("num_authors").value = n_contributors
         // Submit the number of contributors
         document.getElementById("num_auth_button").click()
+        // 
+        chrome.storage.local.set({ task: "start autofill" })
     }
-
-    // run inject function on current tab
+   
+    // Run inject function on current tab
     chrome.scripting.executeScript({
         target: { tabId: tab.id },
         func: set_n_contrib,
-        args: contributors_info
+        args: [contributors_info]
     });
 
-    function fill_form(contrib_info) {
+    //
+    function fill_form(contributors_info) {
+        // Get the number of contributors
+        const n_contributors = contributors_info["Author"].length
+
         // Iteratively fill out each authors information
         for (let i = 0; i < n_contributors; i++) {
             // Select the author info
@@ -27,33 +41,39 @@ function nhb_recipe(contributors_info) {
 
             // With NHB the corresponding author elements have different id
             //Check if the authors is the corresponding author
-            let is_corresponding = author.attributes["is-corresponding-author"]
-
+            if (author.attributes !== undefined && author.attributes["is-corresponding-author"] !== undefined) {
+                var is_corresponding = author.attributes["is-corresponding-author"]
+            } else {
+                var is_corresponding = false
+            }
+            
             // Identify element id prefixes programatically
             if (is_corresponding) {
                 var prefix = "corr_auth"
             } else {
-                var prefix = `contrib_auth_${i}_`
+                var prefix = `contrib_auth_${i}`
             }
 
             // The author information DIV has to made editable by a toggle href
             // First check if the given div is open
-            let author_info_div = document.getElementById(`open_${prefix}`)
-            if (author_info_div.style.display == "none") {
+            let author_info_div = document.getElementById(`open_${prefix}_`)
+              if (author_info_div.style.display == "none") {
                 // If closed open it
-                document.getElementById(`closed_${prefix}_`).innerHTML.getElementsByTagName("a")[0].click()
+                // Divs will be populated even if they are closed
+                let closed_div = document.getElementById(`closed_${prefix}_`)
+                closed_div.getElementsByTagName("a")[0].click()
             }
 
             // Populate author fields
             // Author order
-            document.getElementById(`${prefix}_author_seq`).value = i
+            document.getElementById(`${prefix}_author_seq`).value = i + 1
             // Title
             // Currently we do no colllect this information: defaults to Dr
             document.getElementById(`${prefix}_title`).value = "Dr"
             // First name
             document.getElementById(`${prefix}_first_nm`).value = author.firstname
             // Middle name
-            document.getElementById(`${prefix}_middle_nm`).value = author.middlename
+            document.getElementById(`${prefix}_middle_nm`).value = author.middlename === undefined & author.middlename === "" ? "" : author.middlename
             // Surname
             document.getElementById(`${prefix}_last_nm`).value = author.surname
             // Secondary email
@@ -81,7 +101,7 @@ function nhb_recipe(contributors_info) {
             // Country/region
             //document.getElementById(`${prefix}_country`).value = institution.country
             // zip
-            document.getElementById(`${prefix}_zip`).value = institution.postal - code
+            document.getElementById(`${prefix}_zip`).value = "postal-code" in institution ? institution["postal-code"] : ""
             // Contributions
             // NHB does not use CRediT but they have their own roles
             // By default we will match their roles to CRediT roles
@@ -115,11 +135,18 @@ function nhb_recipe(contributors_info) {
     }
 
     chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-        if (changeInfo.status == 'complete') {
-            chrome.scripting.executeScript({
-                target: { tabId: tab.id },
-                func: fill_form,
-                args: contributors_info
+        // Only fire when the load is complete
+        if (changeInfo.status === "complete") {
+            // Check if the number of author boxes are updated
+            // If yes, run autofill function
+            chrome.storage.local.get(["task"]).then((result) => {
+                if (result.task === "start autofill") {
+                    chrome.scripting.executeScript({
+                        target: { tabId: tab.id },
+                        func: fill_form,
+                        args: [contributors_info]
+                    });
+                }
             });
         }
     })
