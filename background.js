@@ -1,4 +1,4 @@
-import { nhb_recipe } from './assets/js/recipes/nhb_recipe.js';
+import { nhb_recipe } from './src/js/recipes/nhb_recipe.js';
 
 // autofill function
 function autofill(contributors_info) {

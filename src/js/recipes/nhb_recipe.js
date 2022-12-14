@@ -77,7 +77,7 @@ export async function nhb_recipe(contributors_info) {
             // Surname
             document.getElementById(`${prefix}_last_nm`).value = author.surname
             // Secondary email
-            // Currently we only allowe one email address by author so this will be left empty
+            // Currently we only allow one email address by author so this will be left empty
             document.getElementById(`${prefix}_secondary_email`).value = ""
             // Professional title
             // Company/institution
