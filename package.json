@@ -1,7 +1,7 @@
 {
   "name": "pasang",
   "version": "0.1.0",
-  "description": "My Chrome Extension",
+  "description": "Add contributor information automatically to submission portals.",
   "private": true,
   "scripts": {
     "watch": "webpack --mode=development --watch --config config/webpack.config.js",
@@ -17,5 +17,10 @@
     "webpack": "^5.75.0",
     "webpack-cli": "^4.10.0",
     "webpack-merge": "^5.8.0"
+  },
+  "dependencies": {
+    "buffer": "^6.0.3",
+    "fetch": "^1.1.0",
+    "jsonschema": "^1.4.1"
   }
 }

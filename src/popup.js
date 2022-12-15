@@ -1,6 +1,5 @@
-'use strict';
-
 import './popup.css';
+import { fetch } from 'fetch'
 
 // Get submit button
 const submit = document.getElementById("submit");
@@ -16,6 +15,14 @@ var port = chrome.runtime.connect({
 function sendInput() {
     // Get contributors info
     const contributors_info = JSON.parse(document.getElementById("contributor_information").value)
+    // Validate input
+/*     const schema = fetch('https://raw.githubusercontent.com/tenzing-contrib/belayer/main/belayer-flat-schema.json')
+        .then(result => result.json())
+        .catch(err => console.error(err));
+
+    var Validator = require('jsonschema').Validator;
+    var v = new Validator();
+    console.log(v.validate(contributors_info, schema)) */
     // Send contributors info to background
     port.postMessage({contributors_info: contributors_info});
 }
