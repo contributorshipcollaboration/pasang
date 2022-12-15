@@ -1,32 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <title>My Chrome Extension</title>
-    <link rel="stylesheet" href="popup.css" />
+    <link rel="stylesheet" href="popup.css">
+    <script src="popup.js" defer></script>
   </head>
   <body>
-    <div class="app">
-      <p class="counter-label">Counter</p>
-      <div id="counter" class="counter"></div>
-      <div class="button-container">
-        <button id="decrementBtn" class="button">-</button>
-        <button id="incrementBtn" class="button">+</button>
-      </div>
-
-      <hr class="divider" />
-
-      <p class="title">Chrome Extension is Ready!</p>
-      <p class="subtitle">Start by updating <code>popup.html</code></p>
+   <div id="pasang-wrapper">
+    <div id="pasang-header">
+      <h1>pasang</h1>
     </div>
-
-    <script src="popup.js"></script>
-
-    <!--
-      This HTML file opens when you click on icon from the toolbar.
-
-      To begin the development, run `npm run watch`.
-      To create a production bundle, use `npm run build`.
-    -->
+    <div id="pasang-containers">
+      <div class="pasang-form">
+        <label for="text">Copy paste contributor information:</label>
+        <textarea name="text" id="contributor_information" placeholder="Contributor information..."></textarea>
+      </div>
+      <div class=pasang-buttons>
+        <button class="button" id="submit">
+          Submit
+        </button>
+      </div>
+    </div>
+   </div>
   </body>
 </html>

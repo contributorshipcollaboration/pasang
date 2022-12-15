@@ -2,111 +2,28 @@
 
 import './popup.css';
 
-(function () {
-  // We will make use of Storage API to get and store `count` value
-  // More information on Storage API can we found at
-  // https://developer.chrome.com/extensions/storage
+// Get submit button
+const submit = document.getElementById("submit");
 
-  // To get storage access, we have to mention it in `permissions` property of manifest.json file
-  // More information on Permissions can we found at
-  // https://developer.chrome.com/extensions/declare_permissions
-  const counterStorage = {
-    get: (cb) => {
-      chrome.storage.sync.get(['count'], (result) => {
-        cb(result.count);
-      });
-    },
-    set: (value, cb) => {
-      chrome.storage.sync.set(
-        {
-          count: value,
-        },
-        () => {
-          cb();
-        }
-      );
-    },
-  };
+// All tasks will be done in the background.js file
+// popup.js is only used to communicate with the user directly
+// Setting up a long-lived communication between popup.js and background.js
+var port = chrome.runtime.connect({
+    name: "popup-background"
+});
 
-  function setupCounter(initialValue = 0) {
-    document.getElementById('counter').innerHTML = initialValue;
+// Submit contributors_info input to background.js as JSON
+function sendInput() {
+    // Get contributors info
+    const contributors_info = JSON.parse(document.getElementById("contributor_information").value)
+    // Send contributors info to background
+    port.postMessage({contributors_info: contributors_info});
+}
 
-    document.getElementById('incrementBtn').addEventListener('click', () => {
-      updateCounter({
-        type: 'INCREMENT',
-      });
-    });
+// Send popup.html input to background.js for autofilling
+submit.addEventListener('click', sendInput);
 
-    document.getElementById('decrementBtn').addEventListener('click', () => {
-      updateCounter({
-        type: 'DECREMENT',
-      });
-    });
-  }
-
-  function updateCounter({ type }) {
-    counterStorage.get((count) => {
-      let newCount;
-
-      if (type === 'INCREMENT') {
-        newCount = count + 1;
-      } else if (type === 'DECREMENT') {
-        newCount = count - 1;
-      } else {
-        newCount = count;
-      }
-
-      counterStorage.set(newCount, () => {
-        document.getElementById('counter').innerHTML = newCount;
-
-        // Communicate with content script of
-        // active tab by sending a message
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-          const tab = tabs[0];
-
-          chrome.tabs.sendMessage(
-            tab.id,
-            {
-              type: 'COUNT',
-              payload: {
-                count: newCount,
-              },
-            },
-            (response) => {
-              console.log('Current count value passed to contentScript file');
-            }
-          );
-        });
-      });
-    });
-  }
-
-  function restoreCounter() {
-    // Restore count value
-    counterStorage.get((count) => {
-      if (typeof count === 'undefined') {
-        // Set counter value as 0
-        counterStorage.set(0, () => {
-          setupCounter(0);
-        });
-      } else {
-        setupCounter(count);
-      }
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded', restoreCounter);
-
-  // Communicate with background file by sending a message
-  chrome.runtime.sendMessage(
-    {
-      type: 'GREETINGS',
-      payload: {
-        message: 'Hello, my name is Pop. I am from Popup.',
-      },
-    },
-    (response) => {
-      console.log(response.message);
-    }
-  );
-})();
+// Close popup window if background.js is finished
+port.onMessage.addListener(function(msg) {
+    if (msg.closePopup) window.close();
+  });

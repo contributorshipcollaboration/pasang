@@ -1,21 +1,20 @@
 'use strict';
 
-// With background scripts you can communicate with popup
-// and contentScript files.
-// For more information on background script,
-// See https://developer.chrome.com/extensions/background_pages
+import { nhb_recipe } from './nhb_recipe.js';
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.type === 'GREETINGS') {
-    const message = `Hi ${
-      sender.tab ? 'Con' : 'Pop'
-    }, my name is Bac. I am from Background. It's great to hear from you.`;
+// autofill function
+function autofill(contributors_info) {
+    // Call journal recipe function
+    // This function will run in the context of the background.js
+    // A separate function is used to better differentiate between multiple, different submission portals later
+    nhb_recipe(contributors_info)
+}
 
-    // Log message coming from the `request` parameter
-    console.log(request.payload.message);
-    // Send a response message
-    sendResponse({
-      message,
+chrome.runtime.onConnect.addListener(function(port) {
+    port.onMessage.addListener(function(msg) {
+        // Fill out submission portal automatically
+        autofill(msg.contributors_info)
+        // Send message to close popup window
+        port.postMessage({closePopup: true})
     });
-  }
-});
+})
