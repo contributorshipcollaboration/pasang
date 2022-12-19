@@ -1,4 +1,3 @@
-'use strict';
 
 import { nhb_recipe } from './nhb_recipe.js';
 

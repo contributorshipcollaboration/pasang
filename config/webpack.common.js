@@ -13,6 +13,9 @@ const IMAGE_TYPES = /\.(png|jpe?g|gif|svg)$/i;
 // Whenever user creates an extension, CLI adds `webpack.common.js` file
 // in template's `config` folder
 const common = {
+  resolve: {
+    fallback: { "url": false, "buffer": false, "http": false}
+  },
   output: {
     // the build folder to output bundles and assets in.
     path: PATHS.build,
