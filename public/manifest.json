@@ -9,11 +9,24 @@
         "48": "icons/icon_48.png",
         "128": "icons/icon_128.png"
     },
-    "permissions": ["scripting", "activeTab", "tabs", "storage"],
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmIeCQmVaZhCIKO3CErp89mlpBPjODLKzY9GcsAISs9sHwcLPNUOjhmDX0gq7ArlwvRo0AsF5sRhFNxIFzGu5YffQydLabkMEqQZ7p7CgMOn++50Z2Y56Z16QS6QGVmC8Bdzhccyuf0J2BIeZ/AJxbGNIApJKmkEvyU2/jrumO0ceINbwKU5tnWP3+DlH1+JVwgSseVkyI4NH4qhEiPf7QHOcg1wvbcPYwboaU2HoXqcpvWzKzzwKRg6WaMqLJ7M88SeQ05ViUyvaU7xXFMIPffCry3FiQ1Ffdeiyr8DzCw8J0cZmW6u64YiWx3bgisEiqRDYVnKX1UUfNrghZIaRiQIDAQAB",
+    "permissions": [
+        "scripting",
+        "activeTab",
+        "tabs",
+        "storage",
+        "identity"
+    ],
     "action": {
         "default_popup": "popup.html"
     },
     "background": {
         "service_worker": "background.js"
-      }
-  }
+    },
+    "oauth2": {
+        "client_id": "959188567432-bs3fbqg9o0o1lqidktdubqrrpspq9f1f.apps.googleusercontent.com",
+        "scopes": [
+            "https://www.googleapis.com/auth/spreadsheets.readonly"
+        ]
+    }
+}
