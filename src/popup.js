@@ -2,7 +2,7 @@ import './popup.css';
 //import Ajv from 'ajv'
 // Require does not work
 // const {gapi} = require('googleapis');
-
+const {loremIpsum} = require("lorem-ipsum");
 
 // Get submit button
 const submit = document.getElementById("submit");
@@ -36,7 +36,7 @@ function sendSchemaInput() {
 
 function sendUrlInput() {
     const contributor_url = document.getElementById("contributor_url").value;
-    // Find the spreadsheet ID 
+    // Find the spreadsheet ID
     // TODO: Later put this in background.js
 /*     let parts = contributor_url.split("/");
     let spreadsheetId = parts[parts.length - 2];
@@ -64,3 +64,5 @@ port.onMessage.addListener(function(msg) {
     if (msg.closePopup) console.log('submitted')
     // window.close();
   });
+
+submit.innerText = loremIpsum()
