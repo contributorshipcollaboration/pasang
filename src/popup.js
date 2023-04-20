@@ -1,8 +1,6 @@
 import './popup.css';
-//import Ajv from 'ajv'
-// Require does not work
-// const {gapi} = require('googleapis');
-const {loremIpsum} = require("lorem-ipsum");
+// const {Ajv} = require("ajv").default;
+// var Validator = require('jsonschema').Validator;
 
 // Get submit button
 const submit = document.getElementById("submit");
@@ -23,36 +21,31 @@ function sendSchemaInput() {
     // Not working because of CPS policy
 /*     fetch('https://raw.githubusercontent.com/tenzing-contrib/belayer/main/belayer-flat-schema.json')
         .then(result => {
+            var v = new Validator();
+            var instance = 4;
+            var schema = { "type": "number" };
+            console.log(v.validate(instance, schema));
+        //const schema = result.json();
+        //console.log(schema)
+        //console.log(v.validate(contributors_info, schema));
+    }) */
+/*         .then(result => {
             const schema = result.json()
-            const ajv = new Ajv()
+            console.log(schema)
+            const ajv = new Ajv();
             const validate = ajv.compile(schema)
             const valid = validate(data)
             console.log(valid)
         })
-        .catch(err => console.error(err)); */
+        //.catch(err => console.error(err)); */
     // Send contributors info to background
     port.postMessage({ input_type: "schema", contributors_info: contributors_info });
 }
 
 function sendUrlInput() {
-    const contributor_url = document.getElementById("contributor_url").value;
-    // Find the spreadsheet ID
-    // TODO: Later put this in background.js
-/*     let parts = contributor_url.split("/");
-    let spreadsheetId = parts[parts.length - 2];
-    console.log(spreadsheetId)
+    const contributors_url = document.getElementById("contributor_url").value;
 
-    gapi.client.sheets.spreadsheets.get({
-        spreadsheetId: spreadsheetId,
-        ranges: []
-    })
-    .then(function(response) {
-      console.log(response.result);
-    }, function(reason) {
-      console.error('error: ' + reason.result.error.message);
-    }); */
-
-    port.postMessage({ input_type: "url" })
+    port.postMessage({ input_type: "url", contributors_url: contributors_url })
 }
 
 // Send popup.html input to background.js for autofilling
@@ -62,7 +55,6 @@ submitUrl.addEventListener('click', sendUrlInput)
 // Close popup window if background.js is finished
 port.onMessage.addListener(function(msg) {
     if (msg.closePopup) console.log('submitted')
+    // This is commented out for testing purposes only
     // window.close();
   });
-
-submit.innerText = loremIpsum()

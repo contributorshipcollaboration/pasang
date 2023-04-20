@@ -1,4 +1,4 @@
-// TODO: Delete after I figured out how to source this from assets/js/utils.js
+// TODO: Delete the getCurrentTab function after I figured out how to source this from assets/js/utils.js
 async function getCurrentTab() {
     let queryOptions = { active: true, currentWindow: true };
     // `tab` will either be a `tabs.Tab` instance or `undefined`.
