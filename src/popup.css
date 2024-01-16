@@ -1,5 +1,6 @@
 body {
     width: 250px;
+    background-color: #b2dcce;
 }
 
 #pasang-wrapper {
@@ -8,6 +9,7 @@ body {
 
 #pasang-header h1 {
     font-size: 12px;
+    color: #d45f68;
     margin: 0;
     margin-bottom: 10px;
 }
@@ -15,10 +17,10 @@ body {
 .button {
     font-family: Roboto, system-ui, sans-serif;
     align-items: center;
-    border: 1px solid rgb( 218, 220, 224 );
+    border: 1px solid #7ec4ad;
     border-radius: 4px;
     box-sizing: border-box;
-    color: rgb( 26, 115, 232 );
+    color: #d45f68;
     cursor: pointer;
     display: inline-flex;
     flex-shrink: 0;
@@ -30,7 +32,7 @@ body {
     padding: 8px 16px;
     position: relative;
     user-select: none;
-    background: white;
+    background: #C4E4D9;
     margin: 10px 0 5px 10px;
 }
 
@@ -58,7 +60,7 @@ body {
 }
 
 textarea {
-    border: 2px solid rgba( 26, 115, 232, 0.4 );
+    border: 2px solid #7ec4ad;
     padding: 8px;
     border-radius: 4px;
     display: block;
